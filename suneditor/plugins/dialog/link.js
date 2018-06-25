@@ -16,6 +16,8 @@ SUNEDITOR.plugin.link = {
         context.link.focusElement = link_dialog.getElementsByClassName('sun-editor-id-linkurl')[0];
         context.link.linkAnchorText = link_dialog.getElementsByClassName('sun-editor-id-linktext')[0];
         context.link.linkNewWindowCheck = link_dialog.getElementsByClassName('sun-editor-id-linkCheck')[0];
+		context.link.nofollow = link_dialog.getElementsByClassName('sun-editor-id-linkNofollow')[0];
+
 
         /** link button */
         var link_button = eval(this.setController_LinkBtn());
@@ -54,6 +56,7 @@ SUNEDITOR.plugin.link = {
             '           <label>' + lang.dialogBox.linkBox.text + '</label><input class="form-control sun-editor-id-linktext" type="text" />' +
             '       </div>' +
             '       <label class="label-check"><input type="checkbox" class="sun-editor-id-linkCheck" />&nbsp;' + lang.dialogBox.linkBox.newWindowCheck + '</label>' +
+			' <label class="label-check"><input type="checkbox" class="sun-editor-id-linkNofollow" />&nbsp;nofollow</label>' +
             '   </div>' +
             '   <div class="modal-footer">' +
             '       <button type="submit" class="btn btn-primary sun-editor-id-submit-link"><span>' + lang.dialogBox.submitButton + '</span></button>' +
@@ -81,12 +84,15 @@ SUNEDITOR.plugin.link = {
                 oA.href = url;
                 oA.textContent = anchorText;
                 oA.target = (this.context.link.linkNewWindowCheck.checked ? "_blank" : "");
+				oA.rel = (this.context.link.nofollow.checked ? "nofollow" : "");
+
 
                 this.insertNode(oA);
             } else {
                 this.context.link._linkAnchor.href = url;
                 this.context.link._linkAnchor.textContent = anchorText;
                 this.context.link._linkAnchor.target = (this.context.link.linkNewWindowCheck.checked ? "_blank" : "");
+				this.context.link._linkAnchor.rel = (this.context.link.nofollow.checked ? "nofollow" : "");
             }
 
             this.context.link.focusElement.value = "";
@@ -109,6 +115,9 @@ SUNEDITOR.plugin.link = {
         this.context.link.focusElement.value = "";
         this.context.link.linkAnchorText.value = "";
         this.context.link.linkNewWindowCheck.checked = false;
+		this.context.link.nofollow.checked = false;
+
+
     },
 
     /** button */
@@ -156,6 +165,7 @@ SUNEDITOR.plugin.link = {
             this.context.link.focusElement.value = this.context.link._linkAnchor.href;
             this.context.link.linkAnchorText.value = this.context.link._linkAnchor.textContent;
             this.context.link.linkNewWindowCheck.checked = (/_blank/i.test(this.context.link._linkAnchor.target) ? true : false);
+			this.context.link.nofollow.checked = (/nofollow/i.test(this.context.link._linkAnchor.rel) ? true : false)
             SUNEDITOR.plugin.dialog.openDialog.call(this, 'link');
         }
         else {
